@@ -22,4 +22,3 @@ rstest = "0.17.0"
 default = ["with_mimalloc"]
 with_mimalloc = ["dep:mimalloc"]
 with_tracer = ["cairo-vm/tracer", "cairo-vm-tracer"]
-mod_builtin = ["cairo-vm/mod_builtin"]

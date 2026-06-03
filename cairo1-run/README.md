@@ -71,10 +71,6 @@ The cairo1-run cli supports the following optional arguments:
 
 * `--append_return_values`: Adds extra instructions to the program in order to append the return and input values to the output builtin's segment. This is the default behaviour for proof_mode. Only allows `Array<felt252>` as return and input value.
 
-## Running circuits
-
-Circuits in cairo 1 require to enable the `mod_builtin` feature in order for the `AddMod`, `MulMod` and `RangeCheck96` builtins to be taken into account.
-
 # Running scarb projects
 
 As cairo1-run skips gas checks when running, you will need to add the following to your Scarb.toml to ensure that compilation is done without adding gas checks:

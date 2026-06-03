@@ -5880,9 +5880,8 @@ mod tests {
             include_bytes!("../../../../cairo_programs/proof_programs/fibonacci.json"),
             include_bytes!("../../../../cairo_programs/proof_programs/bitwise_builtin_test.json"),
         ];
-        // Match the all_cairo_stwo layout builtins (mod builtins excluded
-        // unless the mod_builtin feature is enabled).
-        let mut allowed = vec![
+        // Match the all_cairo_stwo layout builtins.
+        let allowed = vec![
             BuiltinName::output,
             BuiltinName::pedersen,
             BuiltinName::range_check,
@@ -5890,11 +5889,9 @@ mod tests {
             BuiltinName::ec_op,
             BuiltinName::poseidon,
             BuiltinName::range_check96,
+            BuiltinName::add_mod,
+            BuiltinName::mul_mod,
         ];
-        if cfg!(feature = "mod_builtin") {
-            allowed.push(BuiltinName::add_mod);
-            allowed.push(BuiltinName::mul_mod);
-        }
         for program_bytes in programs {
             let program = Program::from_bytes(program_bytes, Some("main")).unwrap();
 

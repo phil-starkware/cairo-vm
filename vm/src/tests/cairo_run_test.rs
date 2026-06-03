@@ -1,6 +1,5 @@
 use crate::{tests::*, types::layout_name::LayoutName};
 
-#[cfg(feature = "mod_builtin")]
 use crate::{
     utils::test_utils::Program,
     vm::{
@@ -993,7 +992,6 @@ fn run_program_allow_missing_builtins_proof() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin() {
     let program_data =
         include_bytes!("../../../cairo_programs/mod_builtin_feature/mod_builtin.json");
@@ -1001,7 +999,6 @@ fn cairo_run_mod_builtin() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin_failure() {
     let program_data =
         include_bytes!("../../../cairo_programs/mod_builtin_feature/mod_builtin_failure.json");
@@ -1010,7 +1007,6 @@ fn cairo_run_mod_builtin_failure() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin_no_solution() {
     let program_data =
         include_bytes!("../../../cairo_programs/mod_builtin_feature/mod_builtin_no_solution.json");
@@ -1018,7 +1014,6 @@ fn cairo_run_mod_builtin_no_solution() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin_large_batch_size() {
     let program_data = include_bytes!(
         "../../../cairo_programs/mod_builtin_feature/mod_builtin_large_batch_size.json"
@@ -1027,7 +1022,6 @@ fn cairo_run_mod_builtin_large_batch_size() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin_large_batch_size_failure() {
     let program_data = include_bytes!(
         "../../../cairo_programs/mod_builtin_feature/mod_builtin_large_batch_size_failure.json"
@@ -1037,7 +1031,6 @@ fn cairo_run_mod_builtin_large_batch_size_failure() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin_proof() {
     let program_data =
         include_bytes!("../../../cairo_programs/mod_builtin_feature/proof/mod_builtin.json");
@@ -1045,7 +1038,6 @@ fn cairo_run_mod_builtin_proof() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_mod_builtin_large_batch_size_proof() {
     let program_data = include_bytes!(
         "../../../cairo_programs/mod_builtin_feature/proof/mod_builtin_large_batch_size.json"
@@ -1053,7 +1045,6 @@ fn cairo_run_mod_builtin_large_batch_size_proof() {
     run_program_with_custom_mod_builtin_params(program_data, true, 8, 3, None);
 }
 
-#[cfg(feature = "mod_builtin")]
 fn run_program_with_custom_mod_builtin_params(
     data: &[u8],
     proof_mode: bool,
@@ -1110,7 +1101,6 @@ fn run_program_with_custom_mod_builtin_params(
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_apply_poly() {
     let program_data =
         include_bytes!("../../../cairo_programs/mod_builtin_feature/apply_poly.json");
@@ -1118,7 +1108,6 @@ fn cairo_run_apply_poly() {
 }
 
 #[test]
-#[cfg(feature = "mod_builtin")]
 fn cairo_run_apply_poly_proof() {
     let program_data =
         include_bytes!("../../../cairo_programs/mod_builtin_feature/proof/apply_poly.json");

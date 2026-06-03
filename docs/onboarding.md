@@ -41,7 +41,6 @@ The `vm` crate has several feature flags that control compilation:
 
 - `std` (default) — Standard library support. Disable for `no_std`/WASM targets.
 - `cairo-1-hints` — Enables the Cairo 1 hint processor. Pulls in `cairo-lang-casm` and ark dependencies.
-- `mod_builtin` — Enables the modular arithmetic builtin.
 - `cairo-0-secp-hints` — Enables secp256k1/secp256r1 hint implementations for Cairo 0.
 - `cairo-0-data-availability-hints` — Enables data availability-related hints for Cairo 0.
 - `extensive_hints` — Allows extending the hint set at runtime from within a hint.
