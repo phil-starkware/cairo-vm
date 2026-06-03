@@ -168,14 +168,8 @@ impl BuiltinsInstanceDef {
             keccak: Some(KeccakInstanceDef::new(Some(2048))),
             poseidon: Some(PoseidonInstanceDef::new(Some(256))),
             range_check96: Some(RangeCheckInstanceDef::new(Some(8))),
-            #[cfg(feature = "mod_builtin")]
             add_mod: Some(ModInstanceDef::new(Some(128), 1, 96)),
-            #[cfg(feature = "mod_builtin")]
             mul_mod: Some(ModInstanceDef::new(Some(256), 1, 96)),
-            #[cfg(not(feature = "mod_builtin"))]
-            add_mod: None,
-            #[cfg(not(feature = "mod_builtin"))]
-            mul_mod: None,
         }
     }
 
@@ -190,14 +184,8 @@ impl BuiltinsInstanceDef {
             keccak: None,
             poseidon: Some(PoseidonInstanceDef::new(Some(256))),
             range_check96: Some(RangeCheckInstanceDef::new(Some(8))),
-            #[cfg(feature = "mod_builtin")]
             add_mod: Some(ModInstanceDef::new(Some(128), 1, 96)),
-            #[cfg(feature = "mod_builtin")]
             mul_mod: Some(ModInstanceDef::new(Some(256), 1, 96)),
-            #[cfg(not(feature = "mod_builtin"))]
-            add_mod: None,
-            #[cfg(not(feature = "mod_builtin"))]
-            mul_mod: None,
         }
     }
 
@@ -212,14 +200,8 @@ impl BuiltinsInstanceDef {
             keccak: None,
             poseidon: Some(PoseidonInstanceDef::new(Some(256))),
             range_check96: Some(RangeCheckInstanceDef::new(Some(8))),
-            #[cfg(feature = "mod_builtin")]
             add_mod: Some(ModInstanceDef::new(Some(128), 1, 96)),
-            #[cfg(feature = "mod_builtin")]
             mul_mod: Some(ModInstanceDef::new(Some(256), 1, 96)),
-            #[cfg(not(feature = "mod_builtin"))]
-            add_mod: None,
-            #[cfg(not(feature = "mod_builtin"))]
-            mul_mod: None,
         }
     }
 
@@ -267,7 +249,6 @@ impl BuiltinsInstanceDef {
                 params.range_check96_ratio_den,
             )),
         });
-        #[cfg(feature = "mod_builtin")]
         let add_mod = Some(ModInstanceDef {
             ratio: Some(LowRatio::new(
                 params.add_mod_ratio,
@@ -276,7 +257,6 @@ impl BuiltinsInstanceDef {
             word_bit_len: 96,
             batch_size: 1,
         });
-        #[cfg(feature = "mod_builtin")]
         let mul_mod = Some(ModInstanceDef {
             ratio: Some(LowRatio::new(
                 params.mul_mod_ratio,
@@ -285,10 +265,6 @@ impl BuiltinsInstanceDef {
             word_bit_len: 96,
             batch_size: 1,
         });
-        #[cfg(not(feature = "mod_builtin"))]
-        let add_mod = None;
-        #[cfg(not(feature = "mod_builtin"))]
-        let mul_mod = None;
 
         BuiltinsInstanceDef {
             output: true,
@@ -444,14 +420,8 @@ mod tests {
         assert!(builtins.ec_op.is_some());
         assert!(builtins.keccak.is_some());
         assert!(builtins.poseidon.is_some());
-        #[cfg(feature = "mod_builtin")]
         assert!(builtins.add_mod.is_some());
-        #[cfg(feature = "mod_builtin")]
         assert!(builtins.mul_mod.is_some());
-        #[cfg(not(feature = "mod_builtin"))]
-        assert!(builtins.add_mod.is_none());
-        #[cfg(not(feature = "mod_builtin"))]
-        assert!(builtins.mul_mod.is_none());
     }
 
     #[test]
@@ -465,14 +435,8 @@ mod tests {
         assert!(builtins.ec_op.is_some());
         assert!(builtins.keccak.is_none());
         assert!(builtins.poseidon.is_some());
-        #[cfg(feature = "mod_builtin")]
         assert!(builtins.add_mod.is_some());
-        #[cfg(feature = "mod_builtin")]
         assert!(builtins.mul_mod.is_some());
-        #[cfg(not(feature = "mod_builtin"))]
-        assert!(builtins.add_mod.is_none());
-        #[cfg(not(feature = "mod_builtin"))]
-        assert!(builtins.mul_mod.is_none());
     }
 
     #[test]
@@ -486,14 +450,8 @@ mod tests {
         assert!(builtins.ec_op.is_none());
         assert!(builtins.keccak.is_none());
         assert!(builtins.poseidon.is_some());
-        #[cfg(feature = "mod_builtin")]
         assert!(builtins.add_mod.is_some());
-        #[cfg(feature = "mod_builtin")]
         assert!(builtins.mul_mod.is_some());
-        #[cfg(not(feature = "mod_builtin"))]
-        assert!(builtins.add_mod.is_none());
-        #[cfg(not(feature = "mod_builtin"))]
-        assert!(builtins.mul_mod.is_none());
     }
 
     #[test]

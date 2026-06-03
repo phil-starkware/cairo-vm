@@ -430,7 +430,6 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[cfg(feature = "mod_builtin")]
     use crate::types::instance_definitions::mod_instance_def::ModInstanceDef;
 
     use crate::types::instance_definitions::{
@@ -701,36 +700,28 @@ mod tests {
                 ratio: Some(LowRatio::new(8, 16))
             })
         );
-        #[cfg(feature = "mod_builtin")]
-        {
-            assert_eq!(
-                layout.builtins.mul_mod,
-                Some(ModInstanceDef {
-                    ratio: Some(LowRatio {
-                        numerator: 32,
-                        denominator: 16
-                    }),
-                    word_bit_len: 96, // hardcoded
-                    batch_size: 1     // hardcoded
+        assert_eq!(
+            layout.builtins.mul_mod,
+            Some(ModInstanceDef {
+                ratio: Some(LowRatio {
+                    numerator: 32,
+                    denominator: 16
                 }),
-            );
-            assert_eq!(
-                layout.builtins.add_mod,
-                Some(ModInstanceDef {
-                    ratio: Some(LowRatio {
-                        numerator: 8,
-                        denominator: 16
-                    }),
-                    word_bit_len: 96, // hardcoded
-                    batch_size: 1     // hardcoded
-                })
-            );
-        }
-        #[cfg(not(feature = "mod_builtin"))]
-        {
-            assert_eq!(layout.builtins.mul_mod, None,);
-            assert_eq!(layout.builtins.add_mod, None,);
-        }
+                word_bit_len: 96, // hardcoded
+                batch_size: 1     // hardcoded
+            }),
+        );
+        assert_eq!(
+            layout.builtins.add_mod,
+            Some(ModInstanceDef {
+                ratio: Some(LowRatio {
+                    numerator: 8,
+                    denominator: 16
+                }),
+                word_bit_len: 96, // hardcoded
+                batch_size: 1     // hardcoded
+            })
+        );
     }
 
     #[test]

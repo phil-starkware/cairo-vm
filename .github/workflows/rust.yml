@@ -294,7 +294,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        special_features: ["", "extensive_hints", "mod_builtin", "cairo-0-secp-hints", "cairo-0-data-availability-hints"]
+        special_features: ["", "extensive_hints", "cairo-0-secp-hints", "cairo-0-data-availability-hints"]
         target: [ test#1, test#2, test#3, test#4 ]
     name: Run tests
     runs-on: ubuntu-24.04
@@ -541,30 +541,6 @@ jobs:
       with:
         path: lcov-test#4-extensive_hints.info
         key: codecov-cache-test#4-extensive_hints-${{ github.sha }}
-        fail-on-cache-miss: true
-    - name: Fetch results for tests with stdlib (w/mod_builtin; part. 1)
-      uses: actions/cache/restore@v3
-      with:
-        path: lcov-test#1-mod_builtin.info
-        key: codecov-cache-test#1-mod_builtin-${{ github.sha }}
-        fail-on-cache-miss: true
-    - name: Fetch results for tests with stdlib (w/mod_builtin; part. 2)
-      uses: actions/cache/restore@v3
-      with:
-        path: lcov-test#2-mod_builtin.info
-        key: codecov-cache-test#2-mod_builtin-${{ github.sha }}
-        fail-on-cache-miss: true
-    - name: Fetch results for tests with stdlib (w/mod_builtin; part. 3)
-      uses: actions/cache/restore@v3
-      with:
-        path: lcov-test#3-mod_builtin.info
-        key: codecov-cache-test#3-mod_builtin-${{ github.sha }}
-        fail-on-cache-miss: true
-    - name: Fetch results for tests with stdlib (w/mod_builtin; part. 4)
-      uses: actions/cache/restore@v3
-      with:
-        path: lcov-test#4-mod_builtin.info
-        key: codecov-cache-test#4-mod_builtin-${{ github.sha }}
         fail-on-cache-miss: true
     - name: Fetch results for tests with stdlib (w/cairo-0-secp-hints; part. 1)
       uses: actions/cache/restore@v3

@@ -658,7 +658,6 @@ impl ModBuiltinRunner {
     }
 
     #[cfg(test)]
-    #[cfg(feature = "mod_builtin")]
     // Testing method used to test programs that use parameters which are not included in any layout
     // For example, programs with large batch size
     pub(crate) fn override_layout_params(&mut self, batch_size: usize, word_bit_len: u32) {
@@ -806,7 +805,6 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature = "mod_builtin")]
     fn test_air_private_input_all_cairo() {
         use crate::{
             air_private_input::{ModInput, ModInputInstance, ModInputMemoryVars, PrivateInput},

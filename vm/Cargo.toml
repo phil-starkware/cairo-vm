@@ -16,7 +16,6 @@ cairo-1-hints = [
     "dep:ark-std",
 ]
 tracer = []
-mod_builtin = []
 cairo-0-secp-hints = []
 cairo-0-data-availability-hints = []
 
