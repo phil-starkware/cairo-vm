@@ -100,38 +100,6 @@ cat <<EOF > "$TEMP_FOLDER/fractional_units_per_step.json"
 }
 EOF
 
-cat <<EOF > "$TEMP_FOLDER/ratio_den.json"
-{
-    "rc_units": 4,
-    "log_diluted_units_per_step": 4,
-    "cpu_component_step": 8,
-    "memory_units_per_step": 512,
-    "uses_pedersen_builtin": false,
-    "pedersen_ratio": 0,
-    "uses_range_check_builtin": false,
-    "range_check_ratio": 0,
-    "uses_ecdsa_builtin": false,
-    "ecdsa_ratio": 0,
-    "uses_bitwise_builtin": false,
-    "bitwise_ratio": 0,
-    "uses_ec_op_builtin": false,
-    "ec_op_ratio": 0,
-    "uses_keccak_builtin": false,
-    "keccak_ratio": 0,
-    "uses_poseidon_builtin": false,
-    "poseidon_ratio": 0,
-    "uses_range_check96_builtin": true,
-    "range_check96_ratio": 1,
-    "range_check96_ratio_den": 2,
-    "uses_add_mod_builtin": true,
-    "add_mod_ratio": 1,
-    "add_mod_ratio_den": 2,
-    "uses_mul_mod_builtin": true,
-    "mul_mod_ratio": 1,
-    "mul_mod_ratio_den": 2
-}
-EOF
-
 # Build cases to execute
 CASES=(
     "cairo_programs/proof_programs/factorial.json;all_cairo"
@@ -146,17 +114,9 @@ CASES=(
     "cairo_programs/proof_programs/sha256.json;double_all_cairo"
     "cairo_programs/proof_programs/keccak.json;all_cairo"
     "cairo_programs/proof_programs/keccak.json;double_all_cairo"
-    # Mod builtin feature
-    "cairo_programs/mod_builtin_feature/proof/mod_builtin.json;all_cairo"
-    "cairo_programs/mod_builtin_feature/proof/mod_builtin_failure.json;all_cairo"
-    "cairo_programs/mod_builtin_feature/proof/apply_poly.json;all_cairo"
     # Fractional units per step
     "cairo_programs/proof_programs/factorial.json;fractional_units_per_step"
     "cairo_programs/proof_programs/fibonacci.json;fractional_units_per_step"
-    # Ratio den
-    "cairo_programs/mod_builtin_feature/proof/mod_builtin.json;ratio_den"
-    "cairo_programs/mod_builtin_feature/proof/mod_builtin_failure.json;ratio_den"
-    "cairo_programs/mod_builtin_feature/proof/apply_poly.json;ratio_den"
 )
 
 # Build pie cases to execute
