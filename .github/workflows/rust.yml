@@ -3,7 +3,7 @@ name: QA
 on:
   merge_group:
   push:
-    branches: [ main, starkware-development ]
+    branches: [ omri/remove-mod_builtin-feature ]
   pull_request:
     branches: [ '**' ]
 
