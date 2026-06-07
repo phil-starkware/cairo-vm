@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1777905973427,
+  "lastUpdate": 1780838132564,
   "repoUrl": "https://github.com/starkware-libs/cairo-vm",
   "entries": {
     "Benchmark": [
@@ -133708,6 +133708,42 @@ window.BENCHMARK_DATA = {
             "name": "parse program",
             "value": 8734923,
             "range": "± 162593",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "45786542+OmriEshhar1@users.noreply.github.com",
+            "name": "OmriEshhar1",
+            "username": "OmriEshhar1"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d26a5029698e5f3a282c81deb84bbc7ff5ce408d",
+          "message": "fix: remove feature mod_builtin (#2387)\n\n* Remove feature mod_builtin\n\n* change CI branch",
+          "timestamp": "2026-06-07T12:49:06Z",
+          "tree_id": "e4fc7cc00e45e22dbe2fa8920d1f13738b69b4c6",
+          "url": "https://github.com/starkware-libs/cairo-vm/commit/d26a5029698e5f3a282c81deb84bbc7ff5ce408d"
+        },
+        "date": 1780838124731,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "initialize",
+            "value": 15924,
+            "range": "± 830",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "parse program",
+            "value": 8688013,
+            "range": "± 271782",
             "unit": "ns/iter"
           }
         ]
