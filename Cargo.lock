@@ -880,7 +880,7 @@ dependencies = [
 
 [[package]]
 name = "cairo-vm"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
  "anyhow",
  "arbitrary",
@@ -920,7 +920,7 @@ dependencies = [
 
 [[package]]
 name = "cairo-vm-cli"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
  "assert_matches",
  "cairo-vm",
@@ -933,7 +933,7 @@ dependencies = [
 
 [[package]]
 name = "cairo-vm-tracer"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
  "axum",
  "cairo-vm",
@@ -951,7 +951,7 @@ dependencies = [
 
 [[package]]
 name = "cairo1-run"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
  "assert_matches",
  "cairo-lang-casm",
@@ -1611,7 +1611,7 @@ checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
 name = "hint_accountant"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
  "cairo-vm",
  "serde",
@@ -1701,7 +1701,7 @@ dependencies = [
 
 [[package]]
 name = "hyper_threading"
-version = "3.2.0"
+version = "3.2.1"
 dependencies = [
  "cairo-vm",
  "rayon",

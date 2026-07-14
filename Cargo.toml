@@ -14,7 +14,7 @@ default-members = ["cairo-vm-cli", "vm", "cairo1-run"]
 resolver = "2"
 
 [workspace.package]
-version = "3.2.0"
+version = "3.2.1"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/lambdaclass/cairo-vm/"

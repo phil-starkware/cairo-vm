@@ -12,6 +12,10 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 
 #### Upcoming Changes
 
+#### [3.2.1] - 2026-07-14
+
+* fix: decrease spamming logs level to trace [#2385](https://github.com/starkware-libs/cairo-vm/pull/2385)
+
 #### [3.2.0] - 2026-3-3
 
 * chore: Update fuzz_json with missing hint constants and improve fuzzer docs [#2341](https://github.com/lambdaclass/cairo-vm/pull/2341)
