@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         ref: ${{ github.event.pull_request.base.sha }}
     - name: Initialize IAI cache for ${{ github.event.pull_request.base.sha }}
-      uses: actions/cache@v3
+      uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3
       id: cache-iai-results
       with:
         path: |
@@ -23,14 +23,14 @@ jobs:
 
     - name: Install Rust
       if: ${{ steps.cache-iai-results.outputs.cache-hit != 'true' }}
-      uses: dtolnay/rust-toolchain@1.89.0
+      uses: dtolnay/rust-toolchain@451ce45ce31d200b52705aadd15ce75018b006de # 1.89.0
     - name: Set up cargo cache
       if: ${{ steps.cache-iai-results.outputs.cache-hit != 'true' }}
-      uses: Swatinem/rust-cache@v2
+      uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
 
     - name: Install uv
       if: ${{ steps.cache-iai-results.outputs.cache-hit != 'true' }}
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
       with:
           enable-cache: true
     - name: Install python deps
@@ -59,13 +59,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
     - name: Install Rust
-      uses: dtolnay/rust-toolchain@1.89.0
+      uses: dtolnay/rust-toolchain@451ce45ce31d200b52705aadd15ce75018b006de # 1.89.0
     - name: Set up cargo cache
-      uses: Swatinem/rust-cache@v2
+      uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
     - name: Install uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
       with:
           enable-cache: true
     - name: Install python deps
@@ -83,7 +83,7 @@ jobs:
         cargo install --version $IAI_VERSION iai-callgrind-runner
 
     - name: Restore cache for ${{ github.event.pull_request.base.sha }}
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@6f8efc29b200d32929f49075959781ed54ec270c # v3
       with:
         path: |
           */target/iai/iai_benchmark/

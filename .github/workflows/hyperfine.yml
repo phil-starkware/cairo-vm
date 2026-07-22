@@ -23,12 +23,12 @@ jobs:
       benchmark-hashes-head: ${{ steps.export-hashes.outputs.benchmark-hashes-head }}
     steps:
       - name: Checkout base commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.event.pull_request[matrix.branch].sha }}
 
       - name: Fetch from cache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         id: cache
         with:
           path: ${{ matrix.branch }}_programs/*.json
@@ -37,7 +37,7 @@ jobs:
 
       - name: Install uv
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
         with:
           enable-cache: true
       - name: Install python deps
@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Populate cache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         id: cache
         with:
           path: bin/cairo-vm-cli-${{ matrix.branch }}
@@ -78,17 +78,17 @@ jobs:
 
       - name: Install Rust
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        uses: dtolnay/rust-toolchain@1.89.0
+        uses: dtolnay/rust-toolchain@451ce45ce31d200b52705aadd15ce75018b006de # 1.89.0
 
       - name: Checkout
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.event.pull_request[matrix.branch].sha }}
 
       - name: Fetch Rust cache
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
 
       - name: Build binary
         if: ${{ steps.cache.outputs.cache-hit != 'true' }}
@@ -107,30 +107,30 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - name: Install Hyperfine
-      uses: taiki-e/install-action@v2
+      uses: taiki-e/install-action@a6b2e2dcd845ddd7f509ce4f3ed3d922b80cc5d9 # v2
       with:
         tool: hyperfine@1.19
 
     - name: Fetch base binary
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
         path: bin/cairo-vm-cli-base
         key: binary-${{ github.event.pull_request.base.sha }}
 
     - name: Fetch HEAD binary
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
         path: bin/cairo-vm-cli-head
         key: binary-${{ github.event.pull_request.head.sha }}
 
     - name: Fetch base programs
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
         path: base_programs/*.json
         key: benchmarks-base-${{ needs.build-programs.outputs.benchmark-hashes-base }}
 
     - name: Fetch head programs
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
         path: head_programs/*.json
         key: benchmarks-head-${{ needs.build-programs.outputs.benchmark-hashes-head }}
@@ -179,7 +179,7 @@ jobs:
 
     - name: Find comment
       if: ${{ steps.run-benchmarks.outputs.benchmark_count != 0 }}
-      uses: peter-evans/find-comment@v3
+      uses: peter-evans/find-comment@3eae4d37986fb5a8592848f6a574fdf654e61f9e # v3
       id: fc
       with:
         issue-number: ${{ github.event.pull_request.number }}
@@ -188,14 +188,14 @@ jobs:
 
     - name: Create comment
       if: steps.fc.outputs.comment-id == '' && steps.run-benchmarks.outputs.benchmark_count != 0
-      uses: peter-evans/create-or-update-comment@v4
+      uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body-path: comment_body.md
 
     - name: Update comment
       if: steps.fc.outputs.comment-id != '' && steps.run-benchmarks.outputs.benchmark_count != 0
-      uses: peter-evans/create-or-update-comment@v4
+      uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         body-path: comment_body.md

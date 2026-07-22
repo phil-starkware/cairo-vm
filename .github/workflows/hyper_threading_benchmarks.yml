@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout PR
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
       with:
         enable-cache: true
 
@@ -28,7 +28,7 @@ jobs:
         sudo apt-get install -y hyperfine
 
     - name: Install Rust
-      uses: dtolnay/rust-toolchain@1.89.0
+      uses: dtolnay/rust-toolchain@451ce45ce31d200b52705aadd15ce75018b006de # 1.89.0
       with:
         components: rustfmt, clippy
 
@@ -39,20 +39,20 @@ jobs:
         cp ./examples/hyper_threading/hyper-threading-workflow.sh ${{ github.workspace }}/hyper-threading-workflow.sh
 
     - name: Upload PR Binary
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: hyper_threading_pr_binary
         path: ${{ github.workspace }}/hyper_threading_pr
 
     - name: Upload Workflow Script
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: hyper_threading_workflow_script
         path: ${{ github.workspace }}/hyper-threading-workflow.sh
 
 
     - name: Checkout Main Branch
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         ref: 'main'
 
@@ -62,13 +62,13 @@ jobs:
         cp target/release/hyper_threading ${{ github.workspace }}/hyper_threading_main
 
     - name: Download hyper_threading_pr_binary
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
       with:
         name: hyper_threading_pr_binary
         path: ${{ github.workspace }}/
 
     - name: Download hyper_threading_workflow_script
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
       with:
         name: hyper_threading_workflow_script
         path: ${{ github.workspace }}/
@@ -97,7 +97,7 @@ jobs:
         cat result.md
 
     - name: Find comment
-      uses: peter-evans/find-comment@v2
+      uses: peter-evans/find-comment@a54c31d7fa095754bfef525c0c8e5e5674c4b4b1 # v2
       id: fc
       with:
         issue-number: ${{ github.event.pull_request.number }}
@@ -106,14 +106,14 @@ jobs:
 
     - name: Create comment
       if: steps.fc.outputs.comment-id == ''
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@23ff15729ef2fc348714a3bb66d2f655ca9066f2 # v3
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body-path: result.md
 
     - name: Update comment
       if: steps.fc.outputs.comment-id != ''
-      uses: peter-evans/create-or-update-comment@v3
+      uses: peter-evans/create-or-update-comment@23ff15729ef2fc348714a3bb66d2f655ca9066f2 # v3
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         body-path: result.md

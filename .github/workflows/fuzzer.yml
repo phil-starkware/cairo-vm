@@ -11,14 +11,14 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         ref: ${{ github.head_ref }}
 
 
     - name: Cache Inputs
       id: cache-inputs
-      uses: actions/cache@v3
+      uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c # v3
       with:
       # Path where the inputs for the fuzzer are stored
         path: fuzzer/hfuzz_workspace/fuzz_json/input
@@ -51,14 +51,14 @@ jobs:
         cd fuzzer
         HFUZZ_RUN_ARGS="--dict=json.dict --minimize --timeout 60 -T" cargo hfuzz run fuzz_json
 
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@3ea6ae190baf489ba007f7c92608f33ce20ef04a # v4
       with:
         commit_message: changing report
         file_pattern: '*/hfuzz_workspace/fuzzer/fuzz_json/HONGGFUZZ*  */hfuzz_workspace/fuzzer/fuzz_json/*.fuzz'
 
     # Checkout current and last commit for the diff
     - name: Checkout commits
-      uses: actions/checkout@v4
+      uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       with:
         fetch-depth: 2
 
@@ -69,7 +69,7 @@ jobs:
 
     # If a new crash was found, create an issue
     - name: Create issue
-      uses: JasonEtco/create-an-issue@v2
+      uses: JasonEtco/create-an-issue@1b14a70e4d8dc185e5cc76d3bec9eab20257b2c5 # v2
       if: ${{ steps.check_file_changed.outputs.report != '' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
