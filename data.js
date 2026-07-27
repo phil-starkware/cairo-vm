@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1780838132564,
+  "lastUpdate": 1785140206384,
   "repoUrl": "https://github.com/starkware-libs/cairo-vm",
   "entries": {
     "Benchmark": [
@@ -133744,6 +133744,42 @@ window.BENCHMARK_DATA = {
             "name": "parse program",
             "value": 8688013,
             "range": "± 271782",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sobhe@starkware.co",
+            "name": "sobhe-Starkware",
+            "username": "sobhe-Starkware"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eeebcc9cf0cdacf4ae850790328fcfc67b15be48",
+          "message": "pin GitHub Actions to commit SHA (#2388)\n\n* pin GitHub Actions to commit SHA\n\n* fix conflict",
+          "timestamp": "2026-07-27T11:13:17+03:00",
+          "tree_id": "2fcc9a86eefa06fdda3efc221a4ee9c2384c8e46",
+          "url": "https://github.com/starkware-libs/cairo-vm/commit/eeebcc9cf0cdacf4ae850790328fcfc67b15be48"
+        },
+        "date": 1785140198165,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "initialize",
+            "value": 11996,
+            "range": "± 416",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "parse program",
+            "value": 8408366,
+            "range": "± 130711",
             "unit": "ns/iter"
           }
         ]
