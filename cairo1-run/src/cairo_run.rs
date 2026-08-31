@@ -455,6 +455,7 @@ After calling this function (before running the VM):
     (*1+2+3) gap
     (*1+2) gap
     (*1+2) gap
+    (*1+2) gap
     (*2) gap
     (*2) gap
     (*2) gap
@@ -475,6 +476,7 @@ After the entry_code (up until calling main) has been ran by the VM:
     (*1) gap (for output_builtin final ptr)
     (*1) gap (for builtin_0 final ptr)
     (*1) gap (for builtin_1 final ptr)
+    (*1+2) gap (for final SegmentArena ptr)
     (*2) segment_arena_ptr
     (*2) infos_ptr
     (*2) 0
@@ -506,6 +508,8 @@ fn load_arguments(
     // These include:
     // * The builtin bases (not including output)
     // * (Only if the output builtin is added) A gap for each builtin's final pointer
+    // * (Only if the output builtin is added and SegmentArena is present) A gap for the
+    //   final SegmentArena pointer
     // * The segment arena values (if present), including:
     //  * segment_arena_ptr
     //  * info_segment_ptr
@@ -514,6 +518,10 @@ fn load_arguments(
     let mut ap_offset = runner.get_program().builtins_len();
     if cairo_run_config.copy_to_output() {
         ap_offset += runner.get_program().builtins_len() - 1;
+        // Extra local reserved for the final SegmentArena pointer (see create_entry_code).
+        if got_segment_arena {
+            ap_offset += 1;
+        }
     }
     if got_segment_arena {
         ap_offset += SEGMENT_ARENA_GAPS;
@@ -595,7 +603,14 @@ fn create_entry_code(
         for _ in 0..builtins.len() {
             casm_build_extend!(ctx, tempvar _local;);
         }
-        casm_build_extend!(ctx, ap += builtins.len(););
+        // Extra FP-stable local for SegmentArena (not in `builtins`). Output-serialization
+        // `rescope`s drop AP-relative vars; this cell survives them. Placed after builtin
+        // locals so it sits at [fp + builtins.len()]. `ap +=` includes it so AP sits past
+        // the local rather than on it.
+        if got_segment_arena {
+            casm_build_extend!(ctx, tempvar _segment_arena_local;);
+        }
+        casm_build_extend!(ctx, ap += builtins.len() + got_segment_arena as usize;);
     }
     let mut expected_arguments_size = 0;
     if got_segment_arena {
@@ -701,6 +716,15 @@ fn create_entry_code(
             let local = ctx.add_var(CellExpression::Deref(deref!([fp + i.to_i16().unwrap()])));
             casm_build_extend!(ctx, assert local = var;);
         }
+        // Preserve SegmentArena across output-serialization `rescope`s in the dedicated
+        // local at [fp + builtins.len()] reserved above.
+        if got_segment_arena {
+            let sa_local = ctx.add_var(CellExpression::Deref(deref!([
+                fp + builtins.len().to_i16().unwrap()
+            ])));
+            let var = get_var(&BuiltinName::segment_arena);
+            casm_build_extend!(ctx, assert sa_local = var;);
+        }
         // Serialize return values into output segment
         let output_ptr = output_ptr.unwrap();
         let outputs = (1..(return_type_size + 1))
@@ -753,9 +777,11 @@ fn create_entry_code(
             // We lost the output_ptr var after re-scoping, so we need to create it again
             // The last instruction will write the last output ptr so we can find it in [ap - 1]
             let output_ptr = ctx.add_var(CellExpression::Deref(deref!([ap - 1])));
-            // len(builtins - output) + len(builtins) + if segment_arena: segment_arena_ptr +
+            // len(builtins - output) + len(builtins) + segment_arena_local +
             // info_ptr + 0 + (segment_arena_ptr + 3) + (gas_builtin) + (system_builtin)
+            // (+1 for the dedicated SegmentArena local when present)
             let offset = (2 * builtins.len() - 1
+                + got_segment_arena as usize // dedicated SA local
                 + 4 * got_segment_arena as usize
                 + got_gas_builtin as usize
                 + got_system_builtin as usize) as i16;
@@ -792,18 +818,17 @@ fn create_entry_code(
                 EndInputCopy:
             };
         }
-        // After we are done writing into the output segment, we can write the final output_ptr into locals:
-        // The last instruction will write the final output ptr so we can find it in [ap - 1]
+        // After output serialization:
+        // - [ap-1] holds the final output_ptr — write it to [fp+0] before validation
+        //   advances AP (validation uses empty rescopes; FP-relative cells survive).
+        // - SegmentArena was saved at [fp + builtins.len()].
         let output_ptr = ctx.add_var(CellExpression::Deref(deref!([ap - 1])));
         let local = ctx.add_var(CellExpression::Deref(deref!([fp])));
         casm_build_extend!(ctx, assert local = output_ptr;);
-
         if got_segment_arena {
-            // We re-scoped when serializing the output so we have to create a var for the segment arena
-            // len(builtins) + len(builtins - output) + segment_arena_ptr + info_segment + 0
-            let off = 2 * builtins.len() + 2;
-            let segment_arena_ptr = ctx.add_var(CellExpression::Deref(deref!([fp + off as i16])));
-            // Call the hint that will relocate all dictionaries
+            let segment_arena_ptr = ctx.add_var(CellExpression::Deref(deref!([
+                fp + builtins.len().to_i16().unwrap()
+            ])));
             ctx.add_hint(
                 |[ignored_in], [ignored_out]| StarknetHint::Cheatcode {
                     selector: BigIntAsHex {
@@ -851,6 +876,7 @@ fn create_entry_code(
                 DONE_VALIDATION:
             };
         }
+
         // Copying the final builtins from locals into the top of the stack.
         for i in 0..builtins.len().to_i16().unwrap() {
             let local = ctx.add_var(CellExpression::Deref(deref!([fp + i])));
@@ -1629,6 +1655,7 @@ mod tests {
     #[case("../cairo_programs/cairo-1-programs/serialized_output/array_append.cairo")]
     #[case("../cairo_programs/cairo-1-programs/serialized_output/array_get.cairo")]
     #[case("../cairo_programs/cairo-1-programs/serialized_output/dictionaries.cairo")]
+    #[case("../cairo_programs/cairo-1-programs/serialized_output/dict_poseidon.cairo")]
     #[case("../cairo_programs/cairo-1-programs/serialized_output/enum_flow.cairo")]
     #[case("../cairo_programs/cairo-1-programs/serialized_output/enum_match.cairo")]
     #[case("../cairo_programs/cairo-1-programs/serialized_output/factorial.cairo")]

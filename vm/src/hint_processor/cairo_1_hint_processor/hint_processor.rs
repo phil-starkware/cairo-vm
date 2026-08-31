@@ -299,9 +299,18 @@ impl Cairo1HintProcessor {
                 })?;
                 match selector {
                     "RelocateAllDictionaries" => {
-                        let dict_manager_exec_scope = exec_scopes
-                            .get_mut_ref::<DictManagerExecScope>("dict_manager_exec_scope")?;
-                        dict_manager_exec_scope.relocate_all_dictionaries(vm)
+                        // Dict code may be present in the Sierra program (so SegmentArena
+                        // is an implicit) without any dict being allocated on the taken
+                        // path. In that case the exec scope was never created — no-op.
+                        match exec_scopes
+                            .get_mut_ref::<DictManagerExecScope>("dict_manager_exec_scope")
+                        {
+                            Ok(dict_manager_exec_scope) => {
+                                dict_manager_exec_scope.relocate_all_dictionaries(vm)
+                            }
+                            Err(HintError::VariableNotInScopeError(_)) => Ok(()),
+                            Err(e) => Err(e),
+                        }
                     }
                     _ => Err(HintError::UnknownHint(selector.into())),
                 }
