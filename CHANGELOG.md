@@ -11,6 +11,8 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 ---
 
 #### Upcoming Changes
+* fix: recover SegmentArena across `--append_return_values` rescopes and no-op `RelocateAllDictionaries` when no dict was allocated
+
 * ci: pin GitHub Actions to commit SHAs and bump deprecated `upload-artifact`/`download-artifact` to v4 [#2388](https://github.com/starkware-libs/cairo-vm/pull/2388)
 
 * fix: remove feature mod_builtin [#2387](https://github.com/starkware-libs/cairo-vm/pull/2387)

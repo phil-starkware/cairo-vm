@@ -355,6 +355,27 @@ mod tests {
     #[case("with_input/branching.cairo", "0", "[0]", Some("17"), Some("[17]"))]
     #[case("with_input/branching.cairo", "1", "[1]", Some("0"), Some("[0]"))]
     #[case("dictionaries.cairo", "1024", "[1024]", None, None)]
+    #[case(
+        "dict_poseidon.cairo",
+        "1602489809172823862257873759490616802956072677226904159421257053405288194985",
+        "[1602489809172823862257873759490616802956072677226904159421257053405288194985]",
+        None,
+        None
+    )]
+    #[case(
+        "with_input/dict_untaken_branch.cairo",
+        "42",
+        "[42]",
+        Some("0"),
+        Some("[0]")
+    )]
+    #[case(
+        "with_input/dict_untaken_branch.cairo",
+        "1",
+        "[1]",
+        Some("1"),
+        Some("[1]")
+    )]
     #[case("simple_struct.cairo", "100", "[100]", None, None)]
     #[case("simple.cairo", "true", "[1]", None, None)]
     #[case(

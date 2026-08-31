@@ -135,7 +135,11 @@ impl DictManagerExecScope {
                         .into_boxed_str(),
                 ));
             }
+            // Arena validation asserts `curr_start = prev_end + 1`. Advance past the
+            // first dict's end before placing the next one; each iteration does the
+            // same after writing the relocation.
             let mut prev_end = first_segment.end.unwrap_or_default();
+            prev_end += 1;
             for tracker in &self.trackers[1..] {
                 if tracker.start.segment_index >= 0 {
                     return Err(HintError::CustomHint(
