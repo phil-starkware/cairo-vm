@@ -7,9 +7,10 @@ use ark_ff::{One, Zero};
 use num_bigint::{BigInt, BigUint, ToBigInt};
 use num_integer::Integer;
 use num_traits::Signed;
-use starknet_types_core::felt::Felt;
+// Re-exported by `cairo-vm`, so the two crates cannot drift onto different `starknet-types-core` versions.
+use cairo_vm::Felt252 as Felt;
 
-use crate::{
+use cairo_vm::{
     types::relocatable::{MaybeRelocatable, Relocatable},
     vm::{
         errors::{hint_errors::HintError, memory_errors::MemoryError},
