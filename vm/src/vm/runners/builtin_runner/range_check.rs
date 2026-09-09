@@ -10,7 +10,10 @@ use crate::{
     types::relocatable::MaybeRelocatable,
     vm::{
         errors::memory_errors::MemoryError,
-        vm_memory::{memory::Memory, memory_segments::MemorySegmentManager},
+        vm_memory::{
+            memory::{Memory, ValidationRule},
+            memory_segments::MemorySegmentManager,
+        },
     },
 };
 
@@ -101,7 +104,12 @@ impl<const N_PARTS: u64> RangeCheckBuiltinRunner<N_PARTS> {
     }
 
     pub fn add_validation_rule(&self, memory: &mut Memory) {
-        memory.add_range_check_validation_rule(self.base, N_PARTS * INNER_RC_BOUND_SHIFT);
+        memory.add_validation_rule(
+            self.base,
+            ValidationRule::RangeCheck {
+                n_bits: N_PARTS * INNER_RC_BOUND_SHIFT,
+            },
+        );
     }
 
     pub fn get_used_cells(&self, segments: &MemorySegmentManager) -> Result<usize, MemoryError> {
