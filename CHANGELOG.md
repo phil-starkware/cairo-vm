@@ -11,6 +11,8 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 ---
 
 #### Upcoming Changes
+* perf: cache decoded instructions for every segment code runs from, not just segment 0; programs loaded into other segments (e.g. Starknet OS contracts) no longer re-decode every step [#2396](https://github.com/starkware-libs/cairo-vm/pull/2396)
+
 * perf: reduce per-instruction overhead in VM execution hot paths (memory get/insert, range-check validation, instruction cache, operand deduction) [#2391](https://github.com/starkware-libs/cairo-vm/pull/2391)
 
 * ci: pin GitHub Actions to commit SHAs and bump deprecated `upload-artifact`/`download-artifact` to v4 [#2388](https://github.com/starkware-libs/cairo-vm/pull/2388)
