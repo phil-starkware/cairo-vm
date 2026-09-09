@@ -11,6 +11,8 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 ---
 
 #### Upcoming Changes
+* perf: replace the linear builtin-runner scan in operand deduction with a lazily-rebuilt segment lookup. BREAKING: `VirtualMachine::builtin_runners` and `simulated_builtin_runners` are no longer public fields — use `get_builtin_runners`/`get_builtin_runners_as_mut`/`get_simulated_builtin_runners`/`get_simulated_builtin_runners_as_mut`; `compute_operands` now takes `&mut self` [#2394](https://github.com/starkware-libs/cairo-vm/pull/2394)
+
 * perf: reduce per-instruction overhead in VM execution hot paths (memory get/insert, range-check validation, instruction cache, operand deduction) [#2391](https://github.com/starkware-libs/cairo-vm/pull/2391)
 
 * ci: pin GitHub Actions to commit SHAs and bump deprecated `upload-artifact`/`download-artifact` to v4 [#2388](https://github.com/starkware-libs/cairo-vm/pull/2388)
