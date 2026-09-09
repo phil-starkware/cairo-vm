@@ -11,6 +11,8 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 ---
 
 #### Upcoming Changes
+* perf: compile the program's hints once per `CairoRunner` instead of on every run call; proof-mode trace padding no longer recompiles all hints per padding step [#2400](https://github.com/starkware-libs/cairo-vm/pull/2400)
+
 * fix: `run_for_steps` now executes the hints of every pc it visits; previously it reused the hints of the entry pc for all steps [#2392](https://github.com/starkware-libs/cairo-vm/pull/2392)
 
 * perf: reduce per-instruction overhead in VM execution hot paths (memory get/insert, range-check validation, instruction cache, operand deduction) [#2391](https://github.com/starkware-libs/cairo-vm/pull/2391)

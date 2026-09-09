@@ -232,6 +232,11 @@ pub struct CairoRunner {
     pub relocated_memory: Vec<Option<Felt252>>,
     pub exec_scopes: ExecutionScopes,
     pub relocated_trace: Option<Vec<RelocatedTraceEntry>>,
+    /// The program's hints, compiled on the first run call and reused by subsequent ones,
+    /// avoiding recompiling every hint each time a run method is called (e.g. the
+    /// `run_for_steps` calls of proof-mode trace padding). Assumes the same hint processor
+    /// is used across the runner's run calls.
+    hint_data: Option<Vec<Box<dyn Any>>>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -267,6 +272,7 @@ impl CairoRunner {
                 None
             },
             relocated_trace: None,
+            hint_data: None,
         }
     }
 
@@ -781,11 +787,13 @@ impl CairoRunner {
         address: Relocatable,
         hint_processor: &mut dyn HintProcessor,
     ) -> Result<(), VirtualMachineError> {
-        let references = &self.program.shared_program_data.reference_manager;
-        #[cfg(not(feature = "extensive_hints"))]
-        let hint_data = self.get_hint_data(references, hint_processor)?;
-        #[cfg(feature = "extensive_hints")]
-        let mut hint_data = self.get_hint_data(references, hint_processor)?;
+        if self.hint_data.is_none() {
+            self.hint_data = Some(self.get_hint_data(
+                &self.program.shared_program_data.reference_manager,
+                hint_processor,
+            )?);
+        }
+        let hint_data = self.hint_data.get_or_insert_with(Vec::new);
         #[cfg(feature = "extensive_hints")]
         let mut hint_ranges = self
             .program
@@ -794,13 +802,13 @@ impl CairoRunner {
             .hints_ranges
             .clone();
         #[cfg(feature = "test_utils")]
-        self.vm.execute_before_first_step(&hint_data)?;
+        self.vm.execute_before_first_step(hint_data)?;
         while self.vm.get_pc() != address && !hint_processor.consumed() {
             self.vm.step(
                 hint_processor,
                 &mut self.exec_scopes,
                 #[cfg(feature = "extensive_hints")]
-                &mut hint_data,
+                hint_data,
                 #[cfg(not(feature = "extensive_hints"))]
                 self.program
                     .shared_program_data
@@ -832,11 +840,13 @@ impl CairoRunner {
         steps: usize,
         hint_processor: &mut dyn HintProcessor,
     ) -> Result<(), VirtualMachineError> {
-        let references = &self.program.shared_program_data.reference_manager;
-        #[cfg(not(feature = "extensive_hints"))]
-        let hint_data = self.get_hint_data(references, hint_processor)?;
-        #[cfg(feature = "extensive_hints")]
-        let mut hint_data = self.get_hint_data(references, hint_processor)?;
+        if self.hint_data.is_none() {
+            self.hint_data = Some(self.get_hint_data(
+                &self.program.shared_program_data.reference_manager,
+                hint_processor,
+            )?);
+        }
+        let hint_data = self.hint_data.get_or_insert_with(Vec::new);
         #[cfg(feature = "extensive_hints")]
         let mut hint_ranges = self
             .program
@@ -853,7 +863,7 @@ impl CairoRunner {
                 hint_processor,
                 &mut self.exec_scopes,
                 #[cfg(feature = "extensive_hints")]
-                &mut hint_data,
+                hint_data,
                 #[cfg(not(feature = "extensive_hints"))]
                 self.program
                     .shared_program_data
