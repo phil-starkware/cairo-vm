@@ -11,6 +11,8 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 ---
 
 #### Upcoming Changes
+* refactor: replace the boxed-closure `ValidationRule` mechanism with a plain enum of the two existing rules (range-check, signature). BREAKING: `ValidationRule` and `Memory::add_validation_rule` are no longer public [#2395](https://github.com/starkware-libs/cairo-vm/pull/2395)
+
 * perf: reduce per-instruction overhead in VM execution hot paths (memory get/insert, range-check validation, instruction cache, operand deduction) [#2391](https://github.com/starkware-libs/cairo-vm/pull/2391)
 
 * ci: pin GitHub Actions to commit SHAs and bump deprecated `upload-artifact`/`download-artifact` to v4 [#2388](https://github.com/starkware-libs/cairo-vm/pull/2388)

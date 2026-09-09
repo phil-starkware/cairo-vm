@@ -12,20 +12,12 @@ use bitvec::prelude as bv;
 use core::cmp::Ordering;
 use num_traits::ToPrimitive;
 
-pub struct ValidationRule(
-    #[allow(clippy::type_complexity)]
-    pub  Box<dyn Fn(&Memory, Relocatable) -> Result<Vec<Relocatable>, MemoryError>>,
-);
-
-/// Internal representation of validation rules: common built-in rules get a
-/// dedicated variant that can be checked inline, without going through a boxed
-/// closure or allocating the resulting address list.
-enum InnerValidationRule {
-    Closure(ValidationRule),
+/// A validation rule for the values inserted into a builtin's segment.
+pub(crate) enum ValidationRule {
     /// Value must be a felt of at most `n_bits` bits.
-    RangeCheck {
-        n_bits: u64,
-    },
+    RangeCheck { n_bits: u64 },
+    /// Cells hold (pubkey, message) pairs whose signature, registered in the map, must verify.
+    Signature(crate::vm::runners::builtin_runner::SignatureMap),
 }
 
 /// [`MemoryCell`] represents an optimized storage layout for the VM memory.
@@ -191,7 +183,7 @@ pub struct Memory {
     #[cfg(feature = "extensive_hints")]
     pub(crate) relocation_rules: HashMap<usize, MaybeRelocatable>,
     pub validated_addresses: AddressSet,
-    validation_rules: Vec<Option<InnerValidationRule>>,
+    validation_rules: Vec<Option<ValidationRule>>,
 }
 
 impl Memory {
@@ -614,18 +606,7 @@ impl Memory {
         self.insert(key, &val.into())
     }
 
-    pub fn add_validation_rule(&mut self, segment_index: usize, rule: ValidationRule) {
-        self.add_inner_validation_rule(segment_index, InnerValidationRule::Closure(rule));
-    }
-
-    /// Adds a range-check validation rule for the given segment: every value inserted into it
-    /// must be a felt of at most `n_bits` bits. Checked inline, avoiding the allocations of the
-    /// closure-based rules.
-    pub(crate) fn add_range_check_validation_rule(&mut self, segment_index: usize, n_bits: u64) {
-        self.add_inner_validation_rule(segment_index, InnerValidationRule::RangeCheck { n_bits });
-    }
-
-    fn add_inner_validation_rule(&mut self, segment_index: usize, rule: InnerValidationRule) {
+    pub(crate) fn add_validation_rule(&mut self, segment_index: usize, rule: ValidationRule) {
         if segment_index >= self.validation_rules.len() {
             // Fill gaps
             self.validation_rules
@@ -640,7 +621,7 @@ impl Memory {
             .to_usize()
             .and_then(|x| self.validation_rules.get(x))
         {
-            Some(Some(InnerValidationRule::RangeCheck { n_bits })) => {
+            Some(Some(ValidationRule::RangeCheck { n_bits })) => {
                 let n_bits = *n_bits;
                 if !self.validated_addresses.contains(&addr) {
                     let num = self
@@ -656,11 +637,15 @@ impl Memory {
                     self.validated_addresses.extend(&[addr]);
                 }
             }
-            Some(Some(InnerValidationRule::Closure(rule))) => {
-                if !self.validated_addresses.contains(&addr) {
-                    self.validated_addresses
-                        .extend(rule.0(self, addr)?.as_slice());
-                }
+            Some(Some(ValidationRule::Signature(signatures))) => {
+                // Signature validation never registers validated addresses, so no
+                // `validated_addresses` interaction is needed.
+                let signatures = std::rc::Rc::clone(signatures);
+                crate::vm::runners::builtin_runner::validate_signature_cell(
+                    self,
+                    addr,
+                    &signatures,
+                )?;
             }
             _ => {}
         }
@@ -2486,21 +2471,8 @@ mod memory_tests {
             .insert_value(Relocatable::from((1, 0)), Felt252::from(1))
             .unwrap();
 
-        let rule_seg3 = ValidationRule(Box::new(
-            |memory: &Memory, addr: Relocatable| -> Result<Vec<Relocatable>, MemoryError> {
-                memory.get_integer(addr)?;
-                Ok(vec![addr])
-            },
-        ));
-        let rule_seg1 = ValidationRule(Box::new(
-            |memory: &Memory, addr: Relocatable| -> Result<Vec<Relocatable>, MemoryError> {
-                memory.get_integer(addr)?;
-                Ok(vec![addr])
-            },
-        ));
-
-        memory.add_validation_rule(3, rule_seg3);
-        memory.add_validation_rule(1, rule_seg1);
+        memory.add_validation_rule(3, ValidationRule::RangeCheck { n_bits: 128 });
+        memory.add_validation_rule(1, ValidationRule::RangeCheck { n_bits: 128 });
 
         assert!(memory.validation_rules[3].is_some());
         assert!(memory.validation_rules[1].is_some());
