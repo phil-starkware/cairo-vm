@@ -11,6 +11,8 @@ Both branches support Stwo prover opcodes (Blake2s, QM31) since v2.0.0.
 ---
 
 #### Upcoming Changes
+* perf: read the Blake2s opcode state/message via a stack array instead of a `Vec` per operand. BREAKING: removed the (unreachable) `VirtualMachineError::Blake2sInvalidOperand` variant [#2397](https://github.com/starkware-libs/cairo-vm/pull/2397)
+
 * perf: reduce per-instruction overhead in VM execution hot paths (memory get/insert, range-check validation, instruction cache, operand deduction) [#2391](https://github.com/starkware-libs/cairo-vm/pull/2391)
 
 * ci: pin GitHub Actions to commit SHAs and bump deprecated `upload-artifact`/`download-artifact` to v4 [#2388](https://github.com/starkware-libs/cairo-vm/pull/2388)
